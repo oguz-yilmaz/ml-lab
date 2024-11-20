@@ -4,26 +4,28 @@ sınıflandırma modeli.
 
 ## Gereksinimler
 ```bash
-# Create virtual environment
 python -m venv venv
 
-# Activate it
 source venv/bin/activate  # For Mac/Linux
-venv\Scripts\activate  # For Windows
+# venv\Scripts\activate  # For Windows
 
-# Install requirements
 pip install -r requirements.txt
 
-# Run the code
-python model.py
 ```
 
 ## Çalıştırma
-Eğitim:
+```python
+# Modeli oluşturmak için
 python train.py
 
-Değerlendirme:
+# Modeli değerlendirmek için
 python eval.py
+
+# Modeli grafiklerini goruntulemek için
+python plot.py
+```
+
+* `plot.py` ile olusturulan tum grafikleri `plots/` klasorunde bulabilirsiniz
 
 ### Dosya Düzeni
 proje_klasoru/
