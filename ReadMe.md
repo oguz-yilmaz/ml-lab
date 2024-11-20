@@ -1,5 +1,5 @@
 ## Açıklama
-Makine Öğrenmesi (BLM5110) dersi kapsamında TensorFlow ve Keras kullanılarak geliştirilen
+Makine Öğrenmesi (BLM5110) dersi kapsamında Numpy kullanılarak geliştirilen
 sınıflandırma modeli.
 
 ## Gereksinimler
@@ -31,6 +31,8 @@ python plot.py
 proje_klasoru/
  |- train.py
  |- eval.py
+ |- plot.py
+ |- model.pkl
  |- requirements.txt
  |- dataset/
- |- results/
+ |- plots/
