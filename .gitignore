@@ -3,3 +3,4 @@ rapor.synctex.gz
 stochastic.ipynb
 .ipynb_checkpoints
 venv
+__pycache__
