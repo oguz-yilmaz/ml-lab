@@ -4,3 +4,9 @@ stochastic.ipynb
 .ipynb_checkpoints
 venv
 __pycache__
+rapor.aux
+rapor.log
+rapor.out
+rapor.fls
+rapor.fdb_latexmk
+fotolar

@@ -2,6 +2,13 @@
 \usepackage{graphicx}
 \usepackage{amsmath}
 \usepackage{array}
+\usepackage{amsmath}
+\usepackage{amsfonts}
+\usepackage{mathpazo}
+\usepackage{hyperref}
+\usepackage{multimedia}
+\usepackage{tabularx}
+\usepackage[export]{adjustbox}
 \usepackage{url}
 \usepackage[turkish]{babel}
 
@@ -10,12 +17,12 @@
 \title{Lojistik Regresyon ile İkili Sınıflandırma: İş Başvurusu Değerlendirme Sistemi}
 
 \author{
-    \IEEEauthorblockN{İsim Soyisim}
+    \IEEEauthorblockN{Oğuz Yılmaz}
     \IEEEauthorblockA{
-        Bilgisayar Mühendisliği Bölümü\\
-        Üniversite Adı\\
-        Şehir, Ülke\\
-        Email: email@example.com
+        Matematik Mühendisliği Bölümü\\
+        Yıldız Teknik Üniversitesi\\
+        İstanbul, Türkiye\\
+        Email: oguz.yilmaz@yahoo.com
     }
 }
 
@@ -30,16 +37,9 @@ elde edilmiştir. Önerilen sistem, insan kaynakları süreçlerinde karar deste
 mekanizması olarak kullanılabilir niteliktedir.
 \end{abstract}
 
-
 \section{Giriş}
 İnsan kaynakları süreçlerinde adayların değerlendirilmesi, şirketler için
 kritik öneme sahip bir konudur \cite{smith2023}. Bu çalışmada, adayların iki
-farklı sınavdan aldıkları puanlara dayalı olarak işe kabul edilme durumlarını
-tahmin eden bir makine öğrenmesi modeli geliştirilmiştir. Çalışmanın amacı,
-lojistik regresyon yöntemiyle yüksek doğrulukta tahminler yapabilen bir
-sınıflandırıcı oluşturmaktır. Çalışma kapsamında, veri ön işleme, model
-eğitimi, hiperparametre optimizasyonu ve performans değerlendirmesi aşamaları
-gerçekleştirilmiştir.
 
 \section{Yöntem ve Materyal}
 
@@ -47,14 +47,8 @@ gerçekleştirilmiştir.
 Çalışmada kullanılan veri seti, 100 adayın sınav sonuçlarını ve işe kabul
 durumlarını içermektedir. Veri seti \%60 eğitim, \%20 doğrulama ve \%20 test
 olacak şekilde bölünmüştür. Şekil \ref{fig:data_distribution}'de veri setinin
-dağılımı gösterilmektedir.
+dağılımı gösterilmektedir. hata var mi
 
-\begin{figure}[!t]
-\centering
-% \includegraphics[width=0.45\textwidth]{figure1.png}
-\caption{Veri Setinin Sınıflara Göre Dağılımı}
-\label{fig:data_distribution}
-\end{figure}
 
 \subsection{Model Mimarisi}
 Lojistik regresyon modeli aşağıdaki bileşenlerden oluşmaktadır:
@@ -94,21 +88,29 @@ Batch Size & 1 \\
 \section{Deneysel Analiz}
 
 \subsection{Model Eğitimi}
-Model eğitimi sırasında elde edilen eğitim ve doğrulama loss değerleri Şekil
-\ref{fig:loss_curves}'de gösterilmektedir. Grafikten görülebileceği gibi, model
-yaklaşık 600 iterasyon sonrasında yakınsamaya başlamıştır.
+Eğitim sürecinde elde edilen loss eğrileri, modelin yaklaşık 600 iterasyon
+sonrasında kararlı hale geldiğini göstermektedir (Şekil \ref{fig:loss_curves}).
+Doğrulama loss değerlerinin eğitim loss değerlerine yakın seyretmesi, modelin
+aşırı öğrenme problemi yaşamadığını kanıtlamaktadır.
 
-\begin{figure}[!t]
-\centering
-% \includegraphics[width=0.45\textwidth]{figure2.png}
-\caption{Eğitim ve Doğrulama Loss Değerleri}
-\label{fig:loss_curves}
-\end{figure}
+
+\subsection{Tahmin Sonuçları}
+Eğitim, doğrulama ve test setlerinde elde edilen tahminler (Şekil
+\ref{fig:training_predictions}, \ref{fig:validation_predictions},
+\ref{fig:test_predictions}), modelin sınıflandırma yeteneğini görsel olarak
+ortaya koymaktadır. Özellikle:
+
+\begin{itemize}
+\item Test setinde yüksek başarı oranı (1. Sınav Notu > 70 bölgesinde)
+\item Sınır bölgelerinde (50-70 puan aralığı) sınırlı sayıda yanlış sınıflandırma
+\item Düşük puan bölgelerinde (< 50) tutarlı negatif tahminler
+\end{itemize}
 
 \subsection{Performans Değerlendirmesi}
-Model performansı, accuracy, precision, recall ve F1-score metrikleri
-kullanılarak değerlendirilmiştir. Tablo \ref{tab:performance}'de tüm veri
-setleri için elde edilen sonuçlar gösterilmektedir.
+Tablo \ref{tab:performance}'de gösterilen metrikler, modelin tüm veri
+setlerinde tutarlı performans sergilediğini göstermektedir. Test setinde elde
+edilen \%85 doğruluk oranı, modelin genelleme yeteneğinin güçlü olduğunu
+kanıtlamaktadır.
 
 \begin{table}[!t]
 \caption{Performans Metrikleri}
@@ -118,35 +120,51 @@ setleri için elde edilen sonuçlar gösterilmektedir.
 \hline
 \textbf{Metrik} & \textbf{Eğitim} & \textbf{Doğrulama} & \textbf{Test} \\
 \hline
-Accuracy & 0.8833 & 0.8500 & 0.8524 \\
-Precision & 0.8667 & 0.8333 & 0.8421 \\
-Recall & 0.8929 & 0.8333 & 0.8421 \\
-F1-Score & 0.8795 & 0.8333 & 0.8421 \\
+Accuracy & 0.9000 & 0.9000 & 0.8500 \\
+Precision & 0.9062 & 0.9091 & 1.0000 \\
+Recall & 0.9062 & 0.9091 & 0.8235 \\
+F1-Score & 0.9062 & 0.9091 & 0.9032 \\
 \hline
 \end{tabular}
 \end{table}
 
-\section{Sonuç}
-Geliştirilen lojistik regresyon modeli, iş başvurusu değerlendirme sürecinde
-\%85.24 test doğruluğu ile başarılı sonuçlar vermiştir. Eğitim ve doğrulama
-performansları arasındaki küçük fark, modelin aşırı öğrenme problemi
-yaşamadığını göstermektedir. İleride, daha fazla özellik eklenerek ve derin
-öğrenme yöntemleri kullanılarak model performansı artırılabilir
-\cite{kumar2023}. Bu çalışma, insan kaynakları süreçlerinde makine öğrenmesi
-kullanımının potansiyelini göstermektedir \cite{zhang2023}.
+\newpage
 
-\begin{thebibliography}{00}
-\bibitem{smith2023} J. Smith and M. Johnson, ``Machine Learning Applications in
-HR: A Survey,'' \textit{IEEE Trans. Human Resource Management}, vol. 15, no. 3,
-pp. 125-140, 2023.
+\begin{figure}
+\centering
+\includegraphics{fotolar/data.png}
+\caption{Veri Setinin Sınıflara Göre Dağılımı}
+\label{fig:data_distribution}
+\end{figure}
 
-\bibitem{kumar2023} A. Kumar, ``Logistic Regression for Binary Classification:
-A Comprehensive Review,'' \textit{Journal of Machine Learning Research}, vol.
-22, pp. 1-45, 2023.
+\begin{figure}
+\centering
+\includegraphics{fotolar/loss_curves.png}
+\caption{Eğitim ve Doğrulama Loss Değerleri}
+\label{fig:loss_curves}
+\end{figure}
 
-\bibitem{zhang2023} R. Zhang et al., ``Gradient Descent Optimization
-Algorithms: A Comparative Study,'' \textit{Neural Computing and Applications},
-vol. 31, pp. 2545-2562, 2023.
-\end{thebibliography}
+\begin{figure}
+\centering
+\includegraphics{fotolar/dogrulama_predictions.png}
+\caption{Doğrulama Veri Seti İçin Tahminler}
+\label{fig:validation_predictions}
+\end{figure}
+
+\begin{figure}
+\centering
+\includegraphics{fotolar/egitim_predictions.png}
+\caption{Eğitim Veri Seti İçin Tahminler}
+\label{fig:training_predictions}
+\end{figure}
+
+
+\begin{figure}
+\centering
+\includegraphics{fotolar/test_predictions.png}
+\caption{Test Veri Seti İçin Tahminler}
+\label{fig:test_predictions}
+\end{figure}
+
 
 \end{document}

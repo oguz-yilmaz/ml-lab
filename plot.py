@@ -47,7 +47,7 @@ def plot_loss_curves(training_loss, validation_loss):
     plt.close()
 
 
-def plot_predictions(X, y, y_pred, title):
+def plot_predictions(X, y, y_pred, title, save_name):
     plt.figure(figsize=(10, 6))
 
     # Plot correct predictions
@@ -91,7 +91,7 @@ def plot_predictions(X, y, y_pred, title):
     plt.title(title)
     plt.legend()
 
-    plt.savefig(f"./plots/{title}.png")
+    plt.savefig(f"./plots/{save_name}.png")
     plt.close()
 
 
@@ -111,14 +111,16 @@ def main():
     plot_loss_curves(model.training_loss, model.validation_loss)
 
     sets = [
-        ("Eğitim", X_train, y_train),
-        ("Doğrulama", X_val, y_val),
-        ("Test", X_test, y_test),
+        ("Eğitim", X_train, y_train, "egitim"),
+        ("Doğrulama", X_val, y_val, "dogrulama"),
+        ("Test", X_test, y_test, "test"),
     ]
 
-    for name, X_set, y_set in sets:
+    for name, X_set, y_set, save_name in sets:
         y_pred = model.predict(X_set)
-        plot_predictions(X_set, y_set, y_pred, f"{name} Seti Tahminleri")
+        plot_predictions(
+            X_set, y_set, y_pred, f"{name} Seti Tahminleri", f"{save_name}_predictions"
+        )
         accuracy, precision, recall, f1 = calculate_metrics(y_set, y_pred)
 
         print(f"\n{name} Seti Metrikleri:")
