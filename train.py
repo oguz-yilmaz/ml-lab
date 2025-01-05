@@ -8,13 +8,13 @@ from utils import load_data, split_data
 
 class LogisticRegression:
     """
-    Lojistik Regresyon modeli sınıfı.
+    Logistic Regression model class.
 
     Attributes:
-        learning_rate (float): Öğrenme katsayısı
-        num_iterations (int): Maksimum iterasyon sayısı
-        weights (ndarray): Model ağırlıkları
-        bias (float): Bias değeri
+        learning_rate (float): Learning rate
+        num_iterations (int): Maximum number of iterations
+        weights (ndarray): Model weights
+        bias (float): Bias value
     """
 
     def __init__(self, learning_rate=0.01, num_iterations=1000):
@@ -30,29 +30,29 @@ class LogisticRegression:
 
     def sigmoid(self, z):
         """
-        Sigmoid aktivasyon fonksiyonu.
+        Sigmoid activation function.
 
         Args:
-            z (ndarray): logit fonksiyonu ciktisi
+            z (ndarray): Output of the logit function
 
         Returns:
-            skalar: Sigmoid fonksiyonu ciktisi
+            scalar: Output of the sigmoid function
         """
         return np.round(1 / (1 + np.exp(-z)), 8)
 
     def cross_entropy_loss(self, y_true, y_pred_proba):
         """
-        Cross entropy loss hesaplama.
+        Calculate cross entropy loss.
 
         Args:
-            y_true (skaler): Gerçek target degeri (0 veya 1)
-            y_pred_proba (skaler): Tahmin edilen olasilik (0 ile 1 arasinda)
+            y_true (scalar): True target value (0 or 1)
+            y_pred_proba (scalar): Predicted probability (between 0 and 1)
 
         Returns:
-            float: Hesaplanan loss değeri
+            float: Calculated loss value
         """
 
-        y_pred = np.clip(y_pred_proba, 1e-15, 1 - 1e-15)  # log(0) olmaması için
+        y_pred = np.clip(y_pred_proba, 1e-15, 1 - 1e-15)  # to avoid log(0)
 
         return -np.round(
             (y_true * np.log(y_pred) + (1 - y_true) * np.log(1 - y_pred)), 6
@@ -60,17 +60,17 @@ class LogisticRegression:
 
     def stochastic_gradient_descent(self, X, y_true, y_predicted):
         """
-        Stokastik gradyan algoritmasi. Agirliklari ve bias'i günceller.
+        Stochastic gradient algorithm. Updates weights and bias.
 
         Args:
-            X (ndarray): Ozellikler matrisi
-            y_true (skalar): Etiket degeri
-            y_predicted (skalar): Tahmin edilen olasilik degeri
+            X (ndarray): Feature matrix
+            y_true (scalar): Label value
+            y_predicted (scalar): Predicted probability
         """
 
         # Gradient calculation
-        dweight = (y_predicted - y_true) * X  # dL/dw = (y^ - y) * x
-        dbias = y_predicted - y_true  # dL/db = y^ - y
+        dweight = (y_predicted - y_true) * X  # dL/dw = (y_hat - y) * x
+        dbias = y_predicted - y_true  # dL/db = y_hat - y
 
         # Update weights and bias
         self.weights -= self.learning_rate * dweight  # w = w - eta * dL/dw
@@ -78,20 +78,20 @@ class LogisticRegression:
 
     def fit(self, X_train, y_train, X_val=None, y_val=None):
         """
-        Modeli egitme fonksiyonu.
+        Model training function.
 
         Args:
-            X_train (ndarray): Egitim verileri
-            y_train (ndarray): Egitim etiketleri
-            X_val (ndarray): Dogrulama verileri
-            y_val (ndarray): Dogrulama etiketleri
+            X_train (ndarray): Training data
+            y_train (ndarray): Training labels
+            X_val (ndarray): Validation data
+            y_val (ndarray): Validation labels
         """
 
-        # (100, 2) -> 100 ornek, 2 ozellik (x1, x2)
+        # (100, 2) -> 100 samples, 2 features (x1, x2)
         n_samples, n_features = X_train.shape
 
-        # Veriyi standartlastir ki gradient descent iyi calissin
-        # yoksa loss degerleri cok farkli cikiyor anlamsiz grafikler olusuyor
+        # Standardize the data so that gradient descent works better.
+        # Otherwise, the loss values may vary widely and produce meaningless plots.
         standardized_X_train = (
             self.standardize(X_train, fit=True) if self.standardize_inputs else X_train
         )
@@ -106,48 +106,48 @@ class LogisticRegression:
         for iteration in range(self.num_iterations):
             epoch_training_loss = 0
 
-            # her bir ornegi al ve gradient descent ile agirliklari guncelle
-            # asil egitim islemi burada yapiliyor
+            # Take each sample and update weights using gradient descent
+            # The actual training process happens here
             for i in range(n_samples):
                 current_x = standardized_X_train[i]
                 current_y = y_train[i]
 
                 z = np.dot(current_x, self.weights) + self.bias
-                y_predicted = self.sigmoid(z)  # f(X, Q) = y^ = sigmoid(w*x + b)
+                y_predicted = self.sigmoid(z)  # f(X, Q) = y_hat = sigmoid(w*x + b)
 
-                # Agirliklari ve bias'i guncelle
+                # Update weights and bias
                 self.stochastic_gradient_descent(current_x, current_y, y_predicted)
 
                 epoch_training_loss += self.cross_entropy_loss(current_y, y_predicted)
 
-            # Her epoch iterasyonu icin ortalama loss degerini kaydet
+            # For each epoch iteration, record the average loss value
             self.training_loss.append(epoch_training_loss / n_samples)
 
-            # Eger dogrulama verisi varsa, her epoch icin dogrulama loss degerini hesapla
+            # If validation data is available, compute validation loss for each epoch
             if X_val is not None and y_val is not None:
                 val_loss = 0
                 for i in range(len(X_val)):
                     current_x = standardized_X_val[i]
                     current_y = y_val[i]
 
-                    # agirliklari guncelleme, sadece sigmoid hesapla
+                    # Do not update weights, just compute sigmoid
                     z = np.dot(current_x, self.weights) + self.bias
-                    y_predicted = self.sigmoid(z)  # f(X, Q) = y^ = sigmoid(w*x + b)
+                    y_predicted = self.sigmoid(z)  # f(X, Q) = y_hat = sigmoid(w*x + b)
 
                     val_loss += self.cross_entropy_loss(current_y, y_predicted)
 
-                # Her epoch icin dogrulama loss degerini kaydet
+                # Record the validation loss value for each epoch
                 self.validation_loss.append(val_loss / len(X_val))
 
     def predict_proba(self, X):
         """
-        Olasilik tahminlerini hesapla.
+        Calculate probability predictions.
 
         Args:
-            X (ndarray): Ozellikler matrisi veya vektoru
+            X (ndarray): Feature matrix or vector
 
         Returns:
-            skaler: Tahmin edilen olasilik
+            scalar: Predicted probability
         """
 
         if self.standardize_inputs:
@@ -164,15 +164,15 @@ class LogisticRegression:
 
     def predict(self, X, threshold=0.5):
         """
-        Sinif tahminlerini yap.
-        Eger X, threshold'dan buyukse 1, degilse 0 dondur.
+        Make class predictions.
+        If X >= threshold, return 1; otherwise, 0.
 
         Args:
-            X (ndarray): Ozellikler matrisi veya vektoru
-            threshold (float): Siniflandirma esik degeri
+            X (ndarray): Feature matrix or vector
+            threshold (float): Classification threshold
 
         Returns:
-            ndarray: Tahmin edilen siniflar
+            ndarray: Predicted classes
         """
 
         probas = self.predict_proba(X)
@@ -183,14 +183,14 @@ class LogisticRegression:
 
     def standardize(self, X, fit=False):
         """
-        Veriyi standartlastir.
+        Standardize the data.
 
         Args:
-            X (ndarray): Ozellikler vektoru
-            fit (bool): Eger True ise, ortalama ve standart sapma hesapla
+            X (ndarray): Feature vector
+            fit (bool): If True, compute mean and standard deviation
 
         Returns:
-            ndarray: Standartlastirilmis veri
+            ndarray: Standardized data
         """
 
         if fit:
@@ -202,16 +202,16 @@ class LogisticRegression:
 
 def main():
     """
-    Ana program fonksiyonu
+    Main program function
     """
 
-    # Veriyi yukle
+    # Load data
     X, y = load_data("./dataset/hw1Data.txt")
 
-    # Veriyi bol
+    # Split data
     X_train, y_train, X_val, y_val, X_test, y_test = split_data(X, y)
 
-    # Modeli olustur ve egit
+    # Create and train the model
     model = LogisticRegression(learning_rate=0.01, num_iterations=1000)
     model.fit(X_train, y_train, X_val, y_val)
 

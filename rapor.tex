@@ -10,136 +10,139 @@
 \usepackage{tabularx}
 \usepackage[export]{adjustbox}
 \usepackage{url}
-\usepackage[turkish]{babel}
 
 \begin{document}
 
-\title{Lojistik Regresyon ile İkili Sınıflandırma: İş Başvurusu Değerlendirme Sistemi}
+\title{Logistic Regression for Binary Classification: Job Application Evaluation System}
 
 \author{
-    \IEEEauthorblockN{Oğuz Yılmaz}
+    \IEEEauthorblockN{Oguz Yilmaz}
     \IEEEauthorblockA{
-        Matematik Mühendisliği Bölümü\\
-        Yıldız Teknik Üniversitesi\\
-        İstanbul, Türkiye\\
-        Email: oguz.yilmaz1@std.yildiz.edu.tr
+        Istanbul, Turkey\\
+        Email: oguz.yilmaz@yahoo.com
     }
 }
 
 \maketitle
 
 \begin{abstract}
-Bu çalışmada, iş başvurusu yapan adayların iki farklı sınav sonucuna dayalı
-olarak işe kabul edilip edilmeyeceğini tahmin eden bir lojistik regresyon
-modeli geliştirilmiştir. Model, stochastic gradient descent optimizasyonu ve
-cross-entropy loss fonksiyonu kullanılarak eğitilmiş ve \%85.2 test doğruluğu
-elde edilmiştir.
+In this study, a logistic regression model was developed to predict whether
+candidates applying for a job would be accepted based on the results of two
+different exams. The model was trained using stochastic gradient descent
+optimization and the cross-entropy loss function, achieving a test accuracy
+of 85.2%.
 \end{abstract}
 
-\section{Giriş}
-İnsan kaynakları süreçlerinde adayların değerlendirilmesi, şirketler için
-kritik öneme sahip bir konudur \cite{smith2023}. Bu çalışmada, adayların iki
+\section{Introduction}
+In human resources processes, the evaluation of candidates is of critical
+importance for companies \cite{smith2023}. In this study, a machine learning
+model was developed to predict whether candidates would be accepted for a
+position based on the scores they obtained from two different exams. The aim of
+the study is to build a classifier capable of making high-accuracy predictions
+using the logistic regression method. As part of the study, data preprocessing,
+model training, hyperparameter optimization, and performance evaluation steps
+were carried out.
 
-\section{Yöntem ve Materyal}
+\section{Methodology}
 
-\subsection{Veri Seti}
-Çalışmada kullanılan veri seti, 100 adayın sınav sonuçlarını ve işe kabul
-durumlarını içermektedir. Veri seti \%60 eğitim, \%20 doğrulama ve \%20 test
-olacak şekilde bölünmüştür. Şekil \ref{fig:data_distribution}'de veri setinin
-dağılımı gösterilmektedir.
+\subsection{Data Set}
+The data set used in the study contains the exam results and job acceptance
+status of 100 candidates. The data set was divided into 60\% training, 20\%
+validation, and 20\% test sets. The distribution of the data set is shown in
+Figure \ref{fig:data_distribution}.
 
-\subsection{Veri Standardizasyonu}
-Model eğitiminden önce, giriş verileri standartlaştırma işlemine tabi
-tutulmuştur. Bu işlem, farklı ölçeklerdeki sınav puanlarının aynı aralığa
-getirilmesini sağlayarak model performansını iyileştirmektedir.
-Standartlaştırma işlemi aşağıdaki formül kullanılarak gerçekleştirilmiştir:
+\subsection{Data Preprocessing}
+Before training the model, the input data was standardized to improve model
+performance. This process ensures that exam scores, which are on different
+scales, are brought to the same range. The standardization process was carried
+out using the following formula:
 
 \begin{equation}
 z = \frac{x - \mu}{\sigma}
 \end{equation}
 
-Burada:
+where:
 \begin{itemize}
-\item $z$: Standartlaştırılmış değer
-\item $x$: Orijinal değer
-\item $\mu$: Örneklem ortalaması
-\item $\sigma$: Örneklem standart sapması
+\item $z$: Standardized value
+\item $x$: Original value
+\item $\mu$: Sample mean
+\item $\sigma$: Sample standard deviation
 \end{itemize}
 
-Bu işlem sonucunda, her bir özellik için ortalama 0 ve standart sapma 1 olan
-yeni bir dağılım elde edilmiştir. Standartlaştırma parametreleri yalnızca
-eğitim verisi üzerinden hesaplanmış ve aynı parametreler doğrulama ve test
-verilerine uygulanmıştır.
+As a result of this process, a new distribution was obtained for each feature
+with a mean of 0 and a standard deviation of 1. The standardization parameters
+were calculated only on the training data and applied to the validation and test
+data.
 
-\subsection{Model Mimarisi}
-Lojistik regresyon modeli aşağıdaki bileşenlerden oluşmaktadır:
+\subsection{Model Architecture}
+The logistic regression model consists of the following components:
 \begin{itemize}
-\item Sigmoid aktivasyon fonksiyonu: 
+\item Sigmoid activation function:
 \begin{equation}
 \sigma(z) = \frac{1}{1 + e^{-z}}
 \end{equation}
-\item Cross-entropy loss fonksiyonu:
+\item Cross-entropy loss function:
 \begin{equation}
 L = -[y\log(\hat{y}) + (1-y)\log(1-\hat{y})]
 \end{equation}
-\item Stochastic gradient descent optimizasyonu:
+\item Stochastic gradient descent optimization:
 \begin{equation}
 w = w - \alpha\nabla L
 \end{equation}
 \end{itemize}
 
-Hiperparametreler deneysel olarak optimize edilmiş ve Tablo
-\ref{tab:hyperparameters}'de gösterilen değerler kullanılmıştır.
+\subsection{Hyperparameter Optimization}
+
+The hyperparameters of the model were experimentally optimized, and the values
+shown in Table \ref{tab:hyperparameters} were used.
 
 \begin{table}[!t]
-\caption{Model Hiperparametreleri}
+\caption{Model Hyperparameters}
 \label{tab:hyperparameters}
 \centering
 \begin{tabular}{|l|c|}
 \hline
-\textbf{Parametre} & \textbf{Değer} \\
+\textbf{Parameter} & \textbf{Value} \\
 \hline
-Öğrenme Oranı & 0.01 \\
-İterasyon Sayısı & 1000 \\
+Learning Rate & 0.01 \\
+Iteration Count & 1000 \\
 Batch Size & 1 \\
 \hline
 \end{tabular}
 \end{table}
 
-\section{Deneysel Analiz}
+\section{Results}
 
-\subsection{Model Eğitimi}
-Eğitim sürecinde elde edilen loss eğrileri, modelin yaklaşık 600 iterasyon
-sonrasında kararlı hale geldiğini göstermektedir (Şekil \ref{fig:loss_curves}).
-Doğrulama loss değerlerinin eğitim loss değerlerine yakın seyretmesi, modelin
-aşırı öğrenme problemi yaşamadığını kanıtlamaktadır.
+\subsection{Model Training}
+The loss curves obtained during the training process show that the model
+reached a stable state after approximately 600 iterations (Figure
+\ref{fig:loss_curves}). The close proximity of validation loss values to
+training loss values indicates that the model did not experience overfitting.
 
-
-\subsection{Tahmin Sonuçları}
-Eğitim, doğrulama ve test setlerinde elde edilen tahminler (Şekil
+\subsection{Prediction Results}
+The predictions obtained on the training, validation, and test sets (Figures
 \ref{fig:training_predictions}, \ref{fig:validation_predictions},
-\ref{fig:test_predictions}), modelin sınıflandırma yeteneğini görsel olarak
-ortaya koymaktadır. Özellikle:
+\ref{fig:test_predictions}) visually demonstrate the classification ability of
+the model. In particular:
 
 \begin{itemize}
-\item Test setinde yüksek başarı oranı (1. Sınav Notu $>$ 70 bölgesinde)
-\item Sınır bölgelerinde (50-70 puan aralığı) sınırlı sayıda yanlış sınıflandırma
-\item Düşük puan bölgelerinde ($<$ 50) tutarlı negatif tahminler
+\item High accuracy on the test set (above 70 exam score)
+\item Limited misclassifications in the boundary regions (50-70 exam score range)
+\item Consistent negative predictions in the low score regions (below 50)
 \end{itemize}
 
-\subsection{Performans Değerlendirmesi}
-Tablo \ref{tab:performance}'de gösterilen metrikler, modelin tüm veri
-setlerinde tutarlı performans sergilediğini göstermektedir. Test setinde elde
-edilen \%85 doğruluk oranı, modelin genelleme yeteneğinin güçlü olduğunu
-kanıtlamaktadır.
+\subsection{Performance Evaluation}
+The metrics shown in Table \ref{tab:performance} demonstrate that the model
+performed consistently across all data sets. The 85\% accuracy obtained on the
+test set proves that the model has strong generalization capabilities.
 
 \begin{table}[!t]
-\caption{Performans Metrikleri}
+\caption{Performance Metrics}
 \label{tab:performance}
 \centering
 \begin{tabular}{|l|c|c|c|}
 \hline
-\textbf{Metrik} & \textbf{Eğitim} & \textbf{Doğrulama} & \textbf{Test} \\
+\textbf{Metric} & \textbf{Training} & \textbf{Validation} & \textbf{Test} \\
 \hline
 Accuracy & 0.9000 & 0.9000 & 0.8500 \\
 Precision & 0.9062 & 0.9091 & 1.0000 \\
@@ -149,50 +152,50 @@ F1-Score & 0.9062 & 0.9091 & 0.9032 \\
 \end{tabular}
 \end{table}
 
-\section{Sonuç}
-Geliştirilen lojistik regresyon modeli, iş başvurusu değerlendirme sürecinde
-\%85.24 test doğruluğu ile başarılı sonuçlar vermiştir. Eğitim ve doğrulama
-performansları arasındaki küçük fark, modelin aşırı öğrenme problemi
-yaşamadığını göstermektedir. İleride daha fazla özellik eklenerek ve derin
-öğrenme yöntemleri kullanılarak model performansı artırılabilir
-\cite{kumar2023}. Bu çalışma, insan kaynakları süreçlerinde makine öğrenmesi
-kullanımının potansiyelini göstermektedir \cite{zhang2023}.
+\section{Conclusion}
+The logistic regression model developed in this study achieved successful
+results with an 85.24\% test accuracy in the job application evaluation process.
+The small difference between training and validation performances indicates that
+the model did not experience overfitting. In the future, model performance can
+be improved by adding more features and using deep learning methods
+\cite{kumar2023}. This study demonstrates the potential of using machine
+learning in human resources processes \cite{zhang2023}.
 
 \newpage
 
 \begin{figure}
 \centering
-\includegraphics{fotolar/data.png}
-\caption{Veri Setinin Sınıflara Göre Dağılımı}
+\includegraphics{images/data.png}
+\caption{Data Set Distribution by Class}
 \label{fig:data_distribution}
 \end{figure}
 
 \begin{figure}
 \centering
-\includegraphics{fotolar/loss_curves.png}
-\caption{Eğitim ve Doğrulama Loss Değerleri}
+\includegraphics{images/loss_curves.png}
+\caption{Training and Validation Loss Curves}
 \label{fig:loss_curves}
 \end{figure}
 
 \begin{figure}
 \centering
-\includegraphics{fotolar/dogrulama_predictions.png}
-\caption{Doğrulama Veri Seti İçin Tahminler}
+\includegraphics{images/validation_predictions.png}
+\caption{Prediction Results for Validation Data Set}
 \label{fig:validation_predictions}
 \end{figure}
 
 \begin{figure}
 \centering
-\includegraphics{fotolar/egitim_predictions.png}
-\caption{Eğitim Veri Seti İçin Tahminler}
+\includegraphics{images/egitim_predictions.png}
+\caption{Prediction Results for Training Data Set}
 \label{fig:training_predictions}
 \end{figure}
 
 
 \begin{figure}
 \centering
-\includegraphics{fotolar/test_predictions.png}
-\caption{Test Veri Seti İçin Tahminler}
+\includegraphics{images/test_predictions.png}
+\caption{Prediction Results for Test Data Set}
 \label{fig:test_predictions}
 \end{figure}
 

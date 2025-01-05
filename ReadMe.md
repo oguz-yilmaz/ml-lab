@@ -1,8 +1,9 @@
-## Açıklama
-Makine Öğrenmesi (BLM5110) dersi kapsamında Numpy kullanılarak geliştirilen
-sınıflandırma modeli.
+## Description
 
-## Gereksinimler
+A classification model developed using Numpy for the Machine Learning (BLM5110) course.
+
+## Requirements
+
 ```bash
 python -m venv venv
 
@@ -10,29 +11,32 @@ source venv/bin/activate  # For Mac/Linux
 # venv\Scripts\activate  # For Windows
 
 pip install -r requirements.txt
-
 ```
 
-## Çalıştırma
+## Running the Code
+
 ```python
-# Modeli oluşturmak için
+# To create the model
 python train.py
 
-# Modeli değerlendirmek için
+# To evaluate the model
 python eval.py
 
-# Modeli grafiklerini goruntulemek için
+# To visualize the model's plots
 python plot.py
 ```
 
-* `plot.py` ile olusturulan tum grafikleri `plots/` klasorunde bulabilirsiniz
+* You can find all plots created by `plot.py` in the `plots/` directory.
 
-### Dosya Düzeni
-proje_klasoru/
- |- train.py
- |- eval.py
- |- plot.py
- |- model.pkl
- |- requirements.txt
- |- dataset/
- |- plots/
+### File Structure
+
+```bash
+project_folder/
+ ├─ train.py
+ ├─ eval.py
+ ├─ plot.py
+ ├─ model.pkl
+ ├─ requirements.txt
+ ├─ dataset/
+ └─ plots/
+```

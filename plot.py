@@ -9,18 +9,18 @@ from utils import calculate_metrics, load_data, split_data
 
 def plot_data(X, y):
     """
-    Veri setini görselleştir.
+    Visualize the dataset.
 
     Args:
-        X (ndarray): Özellikler (2D)
-        y (ndarray): Etiketler (0 veya 1D)
+        X (ndarray): Features (2D)
+        y (ndarray): Labels
     """
     plt.figure(figsize=(10, 6))
-    plt.scatter(X[y == 0][:, 0], X[y == 0][:, 1], color="red", label="Ret")
-    plt.scatter(X[y == 1][:, 0], X[y == 1][:, 1], color="blue", label="Kabul")
-    plt.xlabel("1. Sınav Notu")
-    plt.ylabel("2. Sınav Notu")
-    plt.title("İş Başvurusu Sonuçları")
+    plt.scatter(X[y == 0][:, 0], X[y == 0][:, 1], color="red", label="Rejected")
+    plt.scatter(X[y == 1][:, 0], X[y == 1][:, 1], color="blue", label="Accepted")
+    plt.xlabel("1st Exam Score")
+    plt.ylabel("2nd Exam Score")
+    plt.title("Job Application Results")
     plt.legend()
 
     plt.savefig("./plots/data.png")
@@ -29,18 +29,18 @@ def plot_data(X, y):
 
 def plot_loss_curves(training_loss, validation_loss):
     """
-    Eğitim ve doğrulama loss değerlerini görselleştir.
+    Visualize the training and validation loss values.
 
     Args:
-        training_loss (list): Eğitim loss değerleri
-        validation_loss (list): Doğrulama loss değerleri
+        training_loss (list): Training loss values
+        validation_loss (list): Validation loss values
     """
     plt.figure(figsize=(10, 6))
-    plt.plot(training_loss, label="Eğitim Loss")
-    plt.plot(validation_loss, label="Doğrulama Loss")
-    plt.xlabel("İterasyon")
+    plt.plot(training_loss, label="Training Loss")
+    plt.plot(validation_loss, label="Validation Loss")
+    plt.xlabel("Iteration")
     plt.ylabel("Cross Entropy Loss")
-    plt.title("Eğitim ve Doğrulama Loss Değerleri")
+    plt.title("Training and Validation Loss Values")
     plt.legend()
 
     plt.savefig("./plots/loss_curves.png")
@@ -86,8 +86,8 @@ def plot_predictions(X, y, y_pred, title, save_name):
         label="False Negative",
     )
 
-    plt.xlabel("1. Sınav Notu")
-    plt.ylabel("2. Sınav Notu")
+    plt.xlabel("1st Exam Score")
+    plt.ylabel("2nd Exam Score")
     plt.title(title)
     plt.legend()
 
@@ -100,36 +100,36 @@ def main():
 
     X, y = load_data("./dataset/hw1Data.txt")
 
-    # Modeli yükle
+    # Load model
     with open("model.pkl", "rb") as f:
         model = pickle.load(f)
 
-    # Veriyi bol
+    # Split the data
     X_train, y_train, X_val, y_val, X_test, y_test = split_data(X, y)
 
     plot_data(X, y)
     plot_loss_curves(model.training_loss, model.validation_loss)
 
     sets = [
-        ("Eğitim", X_train, y_train, "egitim"),
-        ("Doğrulama", X_val, y_val, "dogrulama"),
+        ("Training", X_train, y_train, "training"),
+        ("Validation", X_val, y_val, "validation"),
         ("Test", X_test, y_test, "test"),
     ]
 
     for name, X_set, y_set, save_name in sets:
         y_pred = model.predict(X_set)
         plot_predictions(
-            X_set, y_set, y_pred, f"{name} Seti Tahminleri", f"{save_name}_predictions"
+            X_set, y_set, y_pred, f"{name} Set Predictions", f"{save_name}_predictions"
         )
         accuracy, precision, recall, f1 = calculate_metrics(y_set, y_pred)
 
-        print(f"\n{name} Seti Metrikleri:")
+        print(f"\n{name} Set Metrics:")
         print(f"Accuracy: {accuracy:.4f}")
         print(f"Precision: {precision:.4f}")
         print(f"Recall: {recall:.4f}")
         print(f"F1-Score: {f1:.4f}")
 
-    print("\nGörselleştirmeler kaydedildi. Plots klasörüne bakınız.")
+    print("\nVisualizations saved. Please check the plots folder.")
 
 
 if __name__ == "__main__":

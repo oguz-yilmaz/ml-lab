@@ -10,14 +10,11 @@ def main():
     model = None
     X, y = load_data("./dataset/hw1Data.txt")
 
-    # Veriyi bol
     X_train, y_train, X_val, y_val, X_test, y_test = split_data(X, y)
 
-    # Modeli yükle
     with open("model.pkl", "rb") as f:
         model = pickle.load(f)
 
-    # Tahminler yap ve metrikleri hesapla
     sets = [
         ("Eğitim", X_train, y_train),
         ("Doğrulama", X_val, y_val),
@@ -28,7 +25,7 @@ def main():
         y_pred = model.predict(X_set)
         accuracy, precision, recall, f1 = calculate_metrics(y_set, y_pred)
 
-        print(f"\n{name} Seti Metrikleri:")
+        print(f"\n Metrics for {name} Set")
         print(f"Accuracy: {accuracy:.4f}")
         print(f"Precision: {precision:.4f}")
         print(f"Recall: {recall:.4f}")

@@ -3,11 +3,11 @@ import numpy as np
 
 def calculate_metrics(y_true, y_pred):
     """
-    Performans metriklerini hesapla.
+    Calculate performance metrics.
 
     Args:
-        y_true (ndarray): Gerçek etiketler
-        y_pred (ndarray): Tahmin edilen etiketler
+        y_true (ndarray): True labels
+        y_pred (ndarray): Predicted labels
 
     Returns:
         tuple: accuracy, precision, recall, f1_score
@@ -31,13 +31,13 @@ def calculate_metrics(y_true, y_pred):
 
 def load_data(filename):
     """
-    Veri dosyasini yükle ve ozellikleri ile etiketleri ayir.
+    Load the data file and separate features and labels.
 
     Args:
-        filename (str): Veri dosyasinin yolu
+        filename (str): Path to the data file
 
     Returns:
-        tuple: Ozellikler (X) ve etiketler (y)
+        tuple: Features (X) and labels (y)
     """
 
     # data = array([[34.62365962, 78.02469282,  0.        ],
@@ -46,9 +46,9 @@ def load_data(filename):
     #               ...])
     data = np.loadtxt(filename, delimiter=",")
     # X = array([[34.62365962, 78.02469282],
-    #           [30.28671077, 43.89499752],
-    #           [35.84740877, 72.90219803],
-    #           ...])
+    #            [30.28671077, 43.89499752],
+    #            [35.84740877, 72.90219803],
+    #            ...])
     X = data[:, :2]
     # y = array([0., 0., 0., 1., 1., 0., 1., 1., 1., 1., ...])
     y = data[:, 2]
@@ -58,16 +58,16 @@ def load_data(filename):
 
 def split_data(X, y, train_ratio=0.6, val_ratio=0.2):
     """
-    Veriyi egitim, dogrulama ve test setlerine bol.
+    Split the data into training, validation, and test sets.
 
     Args:
-        X (ndarray): Özellikler
-        y (ndarray): Etiketler
-        train_ratio (float): Egitim seti oranı
-        val_ratio (float): Dogrulama seti oranı
+        X (ndarray): Features
+        y (ndarray): Labels
+        train_ratio (float): Proportion of training set
+        val_ratio (float): Proportion of validation set
 
     Returns:
-        tuple: Bolunmus veri setleri
+        tuple: Split data sets
     """
     n_samples = len(X)
     train_size = int(train_ratio * n_samples)
